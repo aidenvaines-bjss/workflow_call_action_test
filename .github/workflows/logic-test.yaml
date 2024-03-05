@@ -1,0 +1,50 @@
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: The AWS account to deploy to.
+        options:
+        - DEV
+        - INT
+        - REF
+        - PROD
+        required: true
+        default: REF
+  release:
+    types: ["published"]
+
+concurrency:
+  group: ${{ inputs.environment }}-all-components
+
+jobs:
+  pre-build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Prebuild step complete"
+
+  plan-and-deploy-component:
+    runs-on: ubuntu-latest
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        component: ['mgmt', 'mesh', 'events']
+
+    uses: ./.github/workflows/logic-test-child.yaml
+    with:
+      environment: ${{ inputs.environment }}
+      component: ${{ matrix.component }}
+      deploy_layers: ${{ matrix.component == 'mgmt' && true || false }}
+      deploy_infra: true
+      run_tests: ${{ matrix.component == 'events' && true || false }}
+
+    outputs:
+      successful: ${{ steps.plan-and-deploy-component.outcome == 'success' }}

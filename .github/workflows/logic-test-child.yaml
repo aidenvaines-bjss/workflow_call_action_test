@@ -1,0 +1,59 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: choice
+        description: The AWS account to deploy to.
+        options:
+        - DEV
+        - INT
+        - REF
+        - PROD
+        required: true
+        default: REF
+      component:
+        type: choice
+        description: The Terraform component to deploy
+        options:
+        - mgmt
+        - mesh
+        - events
+        default: events
+      deploy_layers:
+        type: boolean
+        description: Deploy Lambda layers. If unchecked, only a TF Plan will be run.
+        default: true
+      deploy_infra:
+        type: boolean
+        description: Deploy MNS infrastructure. If unchecked, only a TF Plan will be run.
+        default: true
+      run_tests:
+        type: boolean
+        description: Run smoke and e2e tests that require a dedicated queue and APIM proxy.
+        default: true
+
+jobs:
+  build-layers:
+    runs-on: ubuntu-latest
+
+    if: ${{ inputs.deploy_layers == true }} # workflow_call doesnt handle bools properly, see docs
+    steps:
+      - name: layer
+        run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} Building layers complete - deploy_layers ${{ inputs.deploy_layers }}"
+
+  do-the-do:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: step complete
+        run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} step complete"
+
+  tests:
+    runs-on: ubuntu-latest
+
+    if: ${{ inputs.run_tests == true }} # workflow_call doesnt handle bools properly, see docs
+    steps:
+      - name: running tests
+        run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} Running tests complete - run_tests ${{ inputs.run_tests }}"
