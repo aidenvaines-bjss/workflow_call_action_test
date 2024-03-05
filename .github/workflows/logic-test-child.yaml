@@ -2,23 +2,13 @@ on:
   workflow_call:
     inputs:
       environment:
-        type: choice
-        description: The AWS account to deploy to.
-        options:
-        - DEV
-        - INT
-        - REF
-        - PROD
+        type: string
+        description: The Github environment to use.
         required: true
-        default: REF
       component:
-        type: choice
+        type: string
         description: The Terraform component to deploy
-        options:
-        - mgmt
-        - mesh
-        - events
-        default: events
+        required: true
       deploy_layers:
         type: boolean
         description: Deploy Lambda layers. If unchecked, only a TF Plan will be run.
