@@ -43,6 +43,3 @@ jobs:
       deploy_layers: ${{ matrix.component == 'mgmt' && true || false }}
       deploy_infra: true
       run_tests: ${{ matrix.component == 'events' && true || false }}
-
-    outputs:
-      successful: ${{ steps.plan-and-deploy-component.outcome == 'success' }}
