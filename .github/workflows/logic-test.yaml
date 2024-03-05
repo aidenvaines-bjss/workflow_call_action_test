@@ -31,8 +31,6 @@ jobs:
       - run: echo "Prebuild step complete"
 
   plan-and-deploy-component:
-    runs-on: ubuntu-latest
-
     strategy:
       max-parallel: 1
       matrix:
