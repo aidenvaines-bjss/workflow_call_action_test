@@ -34,7 +34,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        component: ['mgmt', 'mesh', 'events']
+        component: [mgmt, mesh, events]
 
     uses: ./.github/workflows/logic-test-child.yaml
     with:
