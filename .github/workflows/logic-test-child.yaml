@@ -23,22 +23,22 @@ on:
         default: true
 
 jobs:
+  plan:
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: step complete
+          run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} plan complete"
+
   build-layers:
     runs-on: ubuntu-latest
-
+    environment: ${{ inputs.environment }}
     if: ${{ inputs.deploy_layers == true }} # workflow_call doesnt handle bools properly, see docs
     steps:
       - name: layer
         run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} Building layers complete - deploy_layers ${{ inputs.deploy_layers }}"
-
-  plan:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: step complete
-        run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} plan complete"
 
   apply:
     runs-on: ubuntu-latest
