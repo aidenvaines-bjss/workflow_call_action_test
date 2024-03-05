@@ -31,14 +31,23 @@ jobs:
       - name: layer
         run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} Building layers complete - deploy_layers ${{ inputs.deploy_layers }}"
 
-  do-the-do:
+  plan:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - name: step complete
-        run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} step complete"
+        run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} plan complete"
+
+  apply:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: step complete
+        run: echo "CHILD ${{ inputs.environment }} ${{ inputs.component}} apply complete"
 
   tests:
     runs-on: ubuntu-latest
