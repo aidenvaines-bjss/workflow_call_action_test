@@ -34,12 +34,12 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        component: [mgmt, mesh, events]
+        component: ['mgmt', 'mesh', 'events']
 
     uses: ./.github/workflows/logic-test-child.yaml
     with:
       environment: ${{ inputs.environment }}
       component: ${{ matrix.component }}
-      deploy_layers: ${{ matrix.component == mgmt && true || false }}
+      deploy_layers: ${{ matrix.component == 'mgmt' && true || false }}
       deploy_infra: true
-      run_tests: ${{ matrix.component == events && true || false }}
+      run_tests: ${{ matrix.component == 'events' && true || false }}
