@@ -11,6 +11,10 @@ on:
         - PROD
         required: true
         default: REF
+      run_tests:
+        type: boolean
+        description: Run smoke and e2e tests that require a dedicated queue and APIM proxy.
+        default: true
   release:
     types: ["published"]
 
@@ -40,6 +44,6 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       component: ${{ matrix.component }}
-      deploy_layers: ${{ matrix.component == 'mgmt' && true || false }}
+      deploy_layers: ${{ matrix.component == 'mgmt' && true || false }} # Only deploy layers on the 1st cycle
       deploy_infra: true
-      run_tests: ${{ matrix.component == 'events' && true || false }}
+      run_tests: ${{ (matrix.component == 'events' && inputs.run_tests) && true || false }} # Only run the tests at the end
